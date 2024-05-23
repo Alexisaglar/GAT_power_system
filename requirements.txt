@@ -1,0 +1,9 @@
+torch
+torchvision
+torch-geometric
+pandas
+numpy
+matplotlib
+networkx
+pandapower
+h5py
