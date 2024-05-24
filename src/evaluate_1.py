@@ -9,7 +9,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Load the trained model
 model = GATNet().to(device)
-model.load_state_dict(torch.load('model_final.pth'))
+model.load_state_dict(torch.load('results/model_final.pth'))
 model.eval()
 
 # Load data

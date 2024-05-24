@@ -1,5 +1,2 @@
-data/
-datasets/
-plots/
 venv/
-results/
+checkpoints/
