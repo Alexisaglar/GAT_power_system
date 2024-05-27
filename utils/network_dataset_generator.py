@@ -8,8 +8,8 @@ from copy import deepcopy
 import h5py
 
 # Constants
-NUM_NETWORKS_TO_SIMULATE = 10
-data = 'data/load_seasons.csv'
+NUM_NETWORKS_TO_SIMULATE = 40
+data = 'raw_data/load_seasons.csv'
 
 class PowerFlowSimulator:
     def __init__(self, net, load_file):
@@ -113,7 +113,7 @@ class PowerFlowSimulator:
         plt.savefig(f'plots/Network_{config_number}', dpi=300)
 
     def save_results(self):
-        with h5py.File('data/network_results.h5', 'w') as f:
+        with h5py.File('raw_data/network_results.h5', 'w') as f:
             for i, net_data in self.all_results.items():
                 net_group = f.create_group(f'net_{i}')
                 for season, time_step_data in net_data.items():
