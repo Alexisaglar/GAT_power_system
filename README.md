@@ -6,8 +6,7 @@ This project uses a Graph Attention Network (GAT) to predict voltage magnitude a
 
 1. Clone the repository:
     ```
-    git clone https://github.com/yourusername/yourproject.git
-    cd yourproject
+    git clone https://github.com/alexisaglar/GAT_power_system.git
     ```
 
 2. Install the dependencies:
