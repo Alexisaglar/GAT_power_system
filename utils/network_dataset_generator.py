@@ -79,6 +79,9 @@ class PowerFlowSimulator:
                 self.reset_and_apply_loads(time_step, season)
                 try:
                     pp.runpp(self.net, verbose=True, numba=False)
+                    if np.any((self.net.res_bus.vm_pu < 0.9) | (self.net.res_bus.vm_pu > 1.1)):
+                        print(f"Voltage out of bounds at time step {time_step}, season {season}. Simulation aborted for this step.")
+                        return None  # Skip saving this time ste
                     results = {
                         'res_bus': deepcopy(self.net.res_bus.values),
                         'res_line': deepcopy(self.net.res_line.values)
