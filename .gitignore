@@ -1,4 +1,5 @@
 venv/*
 checkpoints/*
 raw_data/*.h5
+plots/*
 
