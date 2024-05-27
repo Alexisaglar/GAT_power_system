@@ -20,7 +20,7 @@ This project uses a Graph Attention Network (GAT) to predict voltage magnitude a
 
 1. Train the model:
     ```
-    python src/train.py
+    python src/main.py
     ```
 
 2. Evaluate the model:
@@ -30,9 +30,8 @@ This project uses a Graph Attention Network (GAT) to predict voltage magnitude a
 
 ## Project Structure
 
-- `data/`: Contains raw and processed data.
-- `notebooks/`: Contains Jupyter notebooks for data exploration.
+- `raw_data/`: Contains raw and processed data.
 - `src/`: Contains source code for data loading, model definition, training, and evaluation.
-- `plots/`: Contains plots generated during data exploration or training.
+- `plots/`: Contains plots generated during network generation and results.
 - `requirements.txt`: Lists the dependencies needed to run the project.
 - `README.md`: Provides an overview and instructions for the project.
