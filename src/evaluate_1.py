@@ -9,11 +9,11 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Load the trained model
 model = GATNet().to(device)
-model.load_state_dict(torch.load('results/model_final.pth'))
+model.load_state_dict(torch.load('checkpoints/model_final.pth'))
 model.eval()
 
 # Load data
-data_list, target_list = create_dataset('data/network_results.h5')
+data_list, target_list = create_dataset('raw_data/network_results.h5')
 data_loader = DataLoader(list(zip(data_list, target_list)), batch_size=1, shuffle=False)
 
 # Collect predictions and real values for visualization

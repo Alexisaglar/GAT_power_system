@@ -17,15 +17,13 @@ def main():
 
     # Initialize model
     model = GATNet().to(device)
-    optimizer = optim.Adam(model.parameters(), lr=0.01)
+    optimizer = optim.Adam(model.parameters(), lr=0.001)
     criterion = torch.nn.MSELoss()
 
     # Train the model
     checkpoint_path = 'checkpoints/model_epoch_{epoch}.pth'
     final_model_path = 'checkpoints/model_final.pth'
     train_model(model, data_loader, criterion, optimizer, device, epochs=100, checkpoint_path=checkpoint_path, final_model_path=final_model_path)
-    attention_weights_path = 'checkpoints/attention_weights_epoch_{epoch}.pth'
-    train_model(model, data_loader, criterion, optimizer, device, epochs=100, checkpoint_path=checkpoint_path, final_model_path=final_model_path, attention_weights_path=attention_weights_path)
 
    # Test the model
     test_mse = test_model(model, data_loader, device, checkpoint_path=final_model_path)

@@ -18,7 +18,7 @@ def test_model(model, data_loader, device, checkpoint_path='checkpoints/model_fi
             targets = targets.to(device)
             targets = targets.view(-1, 2)  # Flatten the targets
 
-            out, _ = model(data)
+            out = model(data)
             loss = criterion(out, targets)
             total_loss += loss.item()
 
