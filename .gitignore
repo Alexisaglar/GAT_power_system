@@ -1,4 +1,4 @@
 venv/*
 checkpoints/*
-raw_data/*
+raw_data/*.h5
 
