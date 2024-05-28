@@ -55,8 +55,7 @@ class PowerFlowSimulator:
 
     def run_simulation(self):
         incidence_matrix = self.calculate_incidence_matrix()
-        attempts = 0
-        while len(self.successful_nets) < NUM_NETWORKS_TO_SIMULATE and attempts < 100:
+        while len(self.successful_nets) < NUM_NETWORKS_TO_SIMULATE:
             self.configure_network()
             switch_matrix = self.service_matrix()
             if self.is_network_radial(switch_matrix, incidence_matrix):
@@ -71,20 +70,9 @@ class PowerFlowSimulator:
                     print("Failed to converge for all seasons. Trying a new configuration...")
             else:
                 print("Configured network is not radial.")
-            attempts += 1
 
     def simulate_loads(self):
-        # Drop not in service lines and not neccesary columns
-        line_data = self.net.line[['from_bus', 'to_bus', 'length_km', 'r_ohm_per_km', 'x_ohm_per_km']]
-        bus_data = self.net.bus[['vn_kv', 'max_vm_pu', 'min_vm_pu']]
-
-        # Save network configuration data
-        seasonal_results = {'network_config': {
-            # 'line': deepcopy(line_data.values.astype(float)),
-            'line': deepcopy(line_data[self.net.line['in_service']].values),
-            'bus': deepcopy(bus_data.values.astype(float)),
-        }}
-
+        seasonal_results = {}
         for season in self.load_factors.columns:
             time_step_results = {}
             for time_step in range(self.load_factors.shape[0]):
@@ -94,16 +82,11 @@ class PowerFlowSimulator:
                     if np.any((self.net.res_bus.vm_pu < 0.9) | (self.net.res_bus.vm_pu > 1.1)):
                         print(f"Voltage out of bounds at time step {time_step}, season {season}. Simulation aborted for this step.")
                         return None  # Skip saving this time ste
-                    load_data = self.net.load[['bus','p_mw','q_mvar']]
-                    # Add entry to account for slack bus to match dimensions in GAT Trainning
-                    slack_bus_load = pd.DataFrame([[0, 0, 0]], columns=['bus', 'p_mw', 'q_mvar'])
-                    load_data = pd.concat([slack_bus_load,load_data], ignore_index=True)
-                    lfa_results = {
+                    results = {
                         'res_bus': deepcopy(self.net.res_bus.values),
-                        'load': deepcopy(load_data.values.astype(float)),
-                        'res_line': deepcopy(self.net.res_line[self.net.line['in_service']].values)
+                        'res_line': deepcopy(self.net.res_line.values)
                     }
-                    time_step_results[time_step] = lfa_results
+                    time_step_results[time_step] = results
                 except pp.LoadflowNotConverged:
                     print(f'Load flow did not converge for time step {time_step}, season {season}.')
                     return None  # Terminate and return None to indicate failure
@@ -129,30 +112,27 @@ class PowerFlowSimulator:
         nx.draw_networkx(graph, pos, with_labels=True, node_color='black', node_size=300, font_color='white')
         plt.title(f'Power Network Topology - Configuration {config_number}')
         plt.savefig(f'plots/Network_{config_number}', dpi=300)
-        # plt.show()
 
     def save_results(self):
         with h5py.File('raw_data/network_results.h5', 'w') as f:
-            for net_id, net_data in self.all_results.items():
-                net_group = f.create_group(f'network_{net_id}')
-                static_group = net_group.create_group('network_config')
-                static_group.create_dataset('line', data=net_data['network_config']['line'])
-                static_group.create_dataset('bus', data=net_data['network_config']['bus'])
-                # static_group.create_dataset('load', data=net_data['network_config']['load'])
-                
+            for i, net_data in self.all_results.items():
+                net_group = f.create_group(f'net_{i}')
                 for season, time_step_data in net_data.items():
-                    if season == 'network_config':
-                        continue
                     season_group = net_group.create_group(f'season_{season}')
                     for time_step, results in time_step_data.items():
                         time_step_group = season_group.create_group(f'time_step_{time_step}')
+                        # Save bus results
                         time_step_group.create_dataset('res_bus', data=results['res_bus'])
+                        # Save line results
                         time_step_group.create_dataset('res_line', data=results['res_line'])
-                        time_step_group.create_dataset('load', data=results['load'])
 
 if __name__ == '__main__':
-    network = nw.case33bw()
-    simulator = PowerFlowSimulator(network, data)
-    simulator.run_simulation()
-    if simulator.successful_nets:
-        simulator.save_results()
+    try:
+        network = nw.case33bw()
+        simulator = PowerFlowSimulator(network, data)
+        simulator.run_simulation()
+        if simulator.successful_nets:
+            simulator.save_results()
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        raise  # Optionally re-raise the error after logging it
