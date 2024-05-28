@@ -2,6 +2,7 @@ import torch
 
 def train_model(model, data_loader, criterion, optimizer, device, epochs=20, checkpoint_path='checkpoints/model_epoch_{epoch}.pth', final_model_path='checkpoints/model_final.pth'):
     model.train()
+    total_loss = 0
     for epoch in range(epochs):
         total_loss = 0
         for data, targets in data_loader:
@@ -25,4 +26,7 @@ def train_model(model, data_loader, criterion, optimizer, device, epochs=20, che
 
     # Save the final model after training is complete
     torch.save(model.state_dict(), final_model_path)
+
+    average_loss = total_loss / len(data_loader)
+    return average_loss
 

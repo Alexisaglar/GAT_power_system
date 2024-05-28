@@ -37,19 +37,39 @@ from torch_geometric.nn import GATv2Conv
 #         return x
 
 
+# class GATNet(torch.nn.Module):
+#     def __init__(self):
+#         super(GATNet, self).__init__()
+#         self.conv1 = GATv2Conv(in_channels=2, out_channels=16, heads=8, concat=True, dropout=0.6)
+#         self.conv2 = GATv2Conv(in_channels=16*8, out_channels=16, heads=4, concat=True, dropout=0.6)
+#         self.conv3 = GATv2Conv(in_channels=16*4, out_channels=2, heads=1, concat=False, dropout=0.6)
+#
+#     def forward(self, data):
+#         x, edge_index = data.x, data.edge_index
+#         x = self.conv1(x, edge_index)
+#         x = F.elu(x)
+#         x = self.conv2(x, edge_index)
+#         x = F.elu(x)
+#         x = self.conv3(x, edge_index)
+#         return x
 class GATNet(torch.nn.Module):
     def __init__(self):
         super(GATNet, self).__init__()
         self.conv1 = GATv2Conv(in_channels=2, out_channels=16, heads=8, concat=True, dropout=0.6)
+        self.bn1 = torch.nn.BatchNorm1d(num_features=16*8)
         self.conv2 = GATv2Conv(in_channels=16*8, out_channels=16, heads=4, concat=True, dropout=0.6)
+        self.bn2 = torch.nn.BatchNorm1d(num_features=16*4)
         self.conv3 = GATv2Conv(in_channels=16*4, out_channels=2, heads=1, concat=False, dropout=0.6)
+        self.dropout = torch.nn.Dropout(p=0.3)  # Adjust dropout rate here
 
     def forward(self, data):
         x, edge_index = data.x, data.edge_index
         x = self.conv1(x, edge_index)
-        x = F.elu(x)
+        x = self.bn1(x)
+        x = self.dropout(F.elu(x))
         x = self.conv2(x, edge_index)
-        x = F.elu(x)
+        x = self.bn2(x)
+        x = self.dropout(F.elu(x))
         x = self.conv3(x, edge_index)
         return x
 
