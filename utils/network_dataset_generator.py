@@ -55,8 +55,7 @@ class PowerFlowSimulator:
 
     def run_simulation(self):
         incidence_matrix = self.calculate_incidence_matrix()
-        attempts = 0
-        while len(self.successful_nets) < NUM_NETWORKS_TO_SIMULATE and attempts < 100:
+        while len(self.successful_nets) < NUM_NETWORKS_TO_SIMULATE:
             self.configure_network()
             switch_matrix = self.service_matrix()
             if self.is_network_radial(switch_matrix, incidence_matrix):
@@ -71,7 +70,6 @@ class PowerFlowSimulator:
                     print("Failed to converge for all seasons. Trying a new configuration...")
             else:
                 print("Configured network is not radial.")
-            attempts += 1
 
     def simulate_loads(self):
         # Drop not in service lines and not neccesary columns
