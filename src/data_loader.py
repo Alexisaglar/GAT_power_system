@@ -53,5 +53,6 @@ def create_dataset(file):
                         data_list.append(data)
                         target_list.append(targets)
 
+    print(data_list)
     return data_list, target_list
 
