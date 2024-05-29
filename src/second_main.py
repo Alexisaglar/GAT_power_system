@@ -40,7 +40,7 @@ def main():
     test_loader = DataLoader(list(zip(data_test, target_test)), batch_size=batch_size, shuffle=False)
 
     model = GATNet().to(device)
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    optimizer = optim.Adam(model.parameters(), lr=0.01)
     criterion = torch.nn.MSELoss()
 
     patience = 2
