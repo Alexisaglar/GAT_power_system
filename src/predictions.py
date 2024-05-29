@@ -29,14 +29,25 @@ def evaluate_model(model, test_loader, device):
             labels.extend(label.cpu().numpy())
     return predictions, labels
 
-def plot_predictions_vs_labels(predictions, labels):
+def plot_error_distribution(predictions, labels):
+    errors = np.array(predictions) - np.array(labels)
     plt.figure(figsize=(10, 5))
-    plt.scatter(labels, predictions, alpha=0.5)
-    plt.title('Predictions vs. True Labels')
-    plt.xlabel('True Labels')
-    plt.ylabel('Predictions')
-    # Correct use of np.min and np.max for array operations
-    plt.plot([np.min(labels), np.max(labels)], [np.min(labels), np.max(labels)], 'r')  # Diagonal line
+    plt.hist(errors.flatten(), bins=50, alpha=0.7, color='blue')
+    plt.title('Histogram of Prediction Errors')
+    plt.xlabel('Error (Prediction - True Label)')
+    plt.ylabel('Frequency')
+    plt.grid(True)
+    plt.show()
+
+def plot_differences(predictions, labels):
+    differences = predictions[:1000] - labels[:1000]
+    plt.figure(figsize=(12, 7))
+    plt.plot(range(1000), differences, 'm-', label='Prediction Error')
+    plt.title('Plot of Prediction Errors Over Samples')
+    plt.xlabel('Sample Index')
+    plt.ylabel('Prediction Error')
+    plt.axhline(0, color='grey', lw=1)  # Add a line at zero error
+    plt.legend()
     plt.grid(True)
     plt.show()
 
@@ -45,7 +56,11 @@ def main():
     data_path = 'raw_data/network_results.h5'
     model, test_loader, device = load_data_and_model(model_path, data_path)
     predictions, labels = evaluate_model(model, test_loader, device)
-    plot_predictions_vs_labels(predictions, labels)
+    predictions = np.array(predictions)
+    labels = np.array(labels)
+    reshaped_labels = labels.reshape(-1, 2)  # Adjust reshape parameters as per your specific data structure
+    plot_error_distribution(predictions, reshaped_labels)
+    plot_differences(predictions, reshaped_labels)
 
 if __name__ == "__main__":
     main()
