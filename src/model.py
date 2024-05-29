@@ -19,13 +19,13 @@ from torch_geometric.nn import GATv2Conv
 #         x = F.elu(x)
 #         x, (edge_index, attn_weights2) = self.conv2(x, edge_index, return_attention_weights=True)
 #         return x, (attn_weights1, attn_weights2)
-
+#
 # class GATNet(torch.nn.Module):
 #     def __init__(self):
 #         super(GATNet, self).__init__()
 #         # Initialize GATv2Conv layers with standard parameters
-#         self.conv1 = GATv2Conv(in_channels=2, out_channels=8, heads=8, concat=True, dropout=0.6)
-#         self.conv2 = GATv2Conv(in_channels=64, out_channels=2, heads=1, concat=False, dropout=0.6)
+#         self.conv1 = GATConv(in_channels=2, out_channels=8, heads=8, concat=True, dropout=0.6)
+#         self.conv2 = GATConv(in_channels=64, out_channels=2, heads=1, concat=False, dropout=0.6)
 #
 #     def forward(self, data):
 #         x, edge_index = data.x, data.edge_index
@@ -35,8 +35,8 @@ from torch_geometric.nn import GATv2Conv
 #         # Apply the second GATv2 convolution layer
 #         x = self.conv2(x, edge_index)
 #         return x
-
-
+#
+#
 # class GATNet(torch.nn.Module):
 #     def __init__(self):
 #         super(GATNet, self).__init__()
@@ -52,6 +52,7 @@ from torch_geometric.nn import GATv2Conv
 #         x = F.elu(x)
 #         x = self.conv3(x, edge_index)
 #         return x
+# #
 class GATNet(torch.nn.Module):
     def __init__(self):
         super(GATNet, self).__init__()

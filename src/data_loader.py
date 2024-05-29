@@ -35,7 +35,6 @@ def create_dataset(file):
 
                         # extract target values (voltage magnitude and angle)
                         target_bus = time_step_group['res_bus'][:, :2]  
-                        
                         # extract node features (p and q)
                         node_features = time_step_group['load'][:,1:3]
 
