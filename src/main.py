@@ -5,6 +5,7 @@ from model import GATNet
 from data_loader import create_dataset
 from train import train_model
 from test import test_model
+import matplotlib.pyplot as plt
 
 
 def main():
@@ -28,6 +29,20 @@ def main():
    # Test the model
     test_mse = test_model(model, data_loader, device, checkpoint_path=final_model_path)
     print(f'Test MSE: {test_mse:.4f}')
+
+    predictions, actuals = make_predictions(model, test_loader, device)
+
+    # Plotting
+    plt.figure(figsize=(15, 7))
+    plt.plot(actuals, label='Actual Values', color='blue')
+    plt.plot(predictions, label='Predictions', color='red')
+    plt.title('Comparison of Predictions and Actual Values')
+    plt.xlabel('Sample Index')
+    plt.ylabel('Target Value')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
 
 if __name__ == "__main__":
     main()
