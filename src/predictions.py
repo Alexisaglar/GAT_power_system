@@ -40,7 +40,7 @@ def plot_error_distribution(predictions, labels):
     plt.show()
 
 def plot_differences(predictions, labels):
-    differences = predictions[:1000] - labels[:1000]
+    differences = predictions[:1000, 0] - labels[:1000, 0]
     plt.figure(figsize=(12, 7))
     plt.plot(range(1000), differences, 'm-', label='Prediction Error')
     plt.title('Plot of Prediction Errors Over Samples')
@@ -58,6 +58,9 @@ def main():
     predictions, labels = evaluate_model(model, test_loader, device)
     predictions = np.array(predictions)
     labels = np.array(labels)
+    reshaped_labels = labels.reshape(-1, 2)  # Adjust reshape parameters as per your specific data structure
+    print(predictions[0])
+    print(reshaped_labels[0])
     reshaped_labels = labels.reshape(-1, 2)  # Adjust reshape parameters as per your specific data structure
     plot_error_distribution(predictions, reshaped_labels)
     plot_differences(predictions, reshaped_labels)
