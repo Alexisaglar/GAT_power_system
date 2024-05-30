@@ -43,7 +43,7 @@ def plot_differences(predictions, labels):
     differences = predictions[:1440, 0] - labels[:1440, 0]
     plt.figure(figsize=(12, 7))
     # plt.plot(range(1440), differences, 'm-', label='Prediction Error')
-    plt.plot(range(1440), predictions[:1440, 0], '*', label='Prediction value')
+    plt.plot(range(1440), predictions[:1440, 0], '-', label='Prediction value', color="green")
     plt.plot(range(1440), labels[:1440, 0], 'm', label='Real value')
     plt.title('Plot of Prediction Errors Over Samples')
     plt.xlabel('Sample Index')
