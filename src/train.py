@@ -1,6 +1,6 @@
 import torch
 
-def train_model(model, data_loader, criterion, optimizer, device, epochs=20, checkpoint_path='checkpoints/model_epoch_{epoch}.pth', final_model_path='checkpoints/model_final.pth'):
+def train_model(model, data_loader, criterion, optimizer, device, epochs=1, checkpoint_path='checkpoints/model_epoch_{epoch}.pth', final_model_path='checkpoints/model_final.pth'):
     model.train()
     total_loss = 0
     for epoch in range(epochs):

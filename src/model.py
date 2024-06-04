@@ -90,13 +90,10 @@ class GATNet(torch.nn.Module):
 
     def forward(self, data):
         x, edge_index = data.x, data.edge_index
-
         # Apply the first GATv2 layer
         x = F.elu(self.conv1(x, edge_index))
-        
         # Apply the second GATv2 layer
         x = F.elu(self.conv2(x, edge_index))
-        
         # Apply the third GATv2 layer
         x = self.conv3(x, edge_index)
         
