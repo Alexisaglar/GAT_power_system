@@ -82,11 +82,13 @@ class GATNet(torch.nn.Module):
     def __init__(self):
         super(GATNet, self).__init__()
         # First GATv2 layer
-        self.conv1 = GATv2Conv(in_channels=2, out_channels=16, heads=8, concat=True)
+        self.conv1 = GATv2Conv(in_channels=2, out_channels=32, heads=16, concat=True)
         # Second GATv2 layer
-        self.conv2 = GATv2Conv(in_channels=16 * 8, out_channels=16, heads=4, concat=True)
+        self.conv2 = GATv2Conv(in_channels=32 * 16, out_channels=16, heads=8, concat=True)
+        # third GATv2 layer
+        self.conv3 = GATv2Conv(in_channels=16 * 8, out_channels=16, heads=4, concat=True)
         # Third GATv2 layer, outputs the final features
-        self.conv3 = GATv2Conv(in_channels= 16 * 4, out_channels=2, heads=1, concat=False)
+        self.conv4 = GATv2Conv(in_channels= 16 * 4, out_channels=2, heads=1, concat=False)
 
     def forward(self, data):
         x, edge_index = data.x, data.edge_index
@@ -95,6 +97,10 @@ class GATNet(torch.nn.Module):
         # Apply the second GATv2 layer
         x = F.elu(self.conv2(x, edge_index))
         # Apply the third GATv2 layer
-        x = self.conv3(x, edge_index)
-        
+        x = F.elu(self.conv3(x, edge_index))
+        # apply the third
+        # x = self.conv3(x, edge_index)
+        # Apply the third GATv2 layer
+        x = self.conv4(x, edge_index)
+
         return x
