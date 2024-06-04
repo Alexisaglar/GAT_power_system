@@ -21,6 +21,7 @@ from torch_geometric.nn import GATv2Conv
 #         return x, (attn_weights1, attn_weights2)
 
 
+
 # class GATNet(torch.nn.Module):
 #     def __init__(self):
 #         super(GATNet, self).__init__()
