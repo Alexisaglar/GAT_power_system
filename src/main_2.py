@@ -7,9 +7,10 @@ from model import GATNet
 from data_loader import create_dataset
 from train import train_model
 from test import test_model
-from validate import validate_model  # Assuming validate_model is adapted to handle attention
+from validate import validate_model  # Ensure this is correctly implemented
 
 def split_data(data_list, target_list):
+    # Ensure your data is suitable for PyTorch operations if further transformations are needed.
     data_train, data_temp, target_train, target_temp = train_test_split(
         data_list, target_list, test_size=0.3, random_state=42)
     data_val, data_test, target_val, target_test = train_test_split(
@@ -34,6 +35,7 @@ def main():
     data_train, data_val, data_test, target_train, target_val, target_test = split_data(data_list, target_list)
 
     batch_size = 32
+    # Ensure DataLoader is compatible with the data format
     train_loader = DataLoader(list(zip(data_train, target_train)), batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(list(zip(data_val, target_val)), batch_size=batch_size, shuffle=False)
     test_loader = DataLoader(list(zip(data_test, target_test)), batch_size=batch_size, shuffle=False)
@@ -53,9 +55,6 @@ def main():
 
         train_losses.append(train_loss)
         val_losses.append(val_loss)
-
-        # Example to process or visualize attention weights here
-        # process_attention(val_attention)
 
         if val_loss < best_val_loss:
             best_val_loss = val_loss
